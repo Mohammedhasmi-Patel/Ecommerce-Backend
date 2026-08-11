@@ -1,6 +1,6 @@
 namespace Ecommerce.API.Entities;
 
-public class OrderAddresses : BaseEntity
+public class OrderAddress : BaseEntity
 {
     public Guid OrderId { get; set; }
     public string FullName { get; set; } = null!;

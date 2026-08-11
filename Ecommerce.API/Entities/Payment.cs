@@ -3,7 +3,7 @@ using Ecommerce.API.Enum;
 
 namespace Ecommerce.API.Entities;
 
-public class Payments : BaseEntity
+public class Payment : BaseEntity
 {
     public Guid OrderId { get; set; }
     public string Provider { get; set; } = null!;
@@ -15,7 +15,11 @@ public class Payments : BaseEntity
 
     public string Currency { get; set; } = null!;
 
-    public PaymentStatus Status { get; set; } 
+    public PaymentStatus Status { get; set; }
 
     public DateTime PaidAt { get; set; }
+
+    // navigation property
+    public Order Order { get; set; } = null!;
+
 }

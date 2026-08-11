@@ -14,5 +14,11 @@ public class Order : BaseEntity
     public decimal ShippingAmount { get; set; }
     public decimal TaxAmount { get; set; }
     public decimal TotalAmount { get; set; }
-    public OrderStatus Status { get; set; } 
+    public OrderStatus Status { get; set; }
+
+    // nvaigation property
+    public AppUser User { get; set; } = null!;
+    public OrderAddress OrderAddresses { get; set; } = null!;
+    public Payment Payments { get; set; } = null!;
+    public ICollection<OrderItem> OrderItems { get; set; } = [];
 }

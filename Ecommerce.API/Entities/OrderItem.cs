@@ -1,24 +1,5 @@
 namespace Ecommerce.API.Entities;
 
-/*
-Table OrderItems {
-  Id Guid [PRIMARY KEY]
-  OrderId Guid [NOT NULL]
-  ProductId Guid
-
-  ProductName string
-  UnitPrice decimal
-  Quantity decimal
-  TotalPrice decimal
-
-  CreatedAt timestamp
-  UpdatedAt timestamp
-
-}
-
-
-*/
-
 public class OrderItem : BaseEntity
 {
     public Guid OrderId { get; set; }
@@ -27,4 +8,8 @@ public class OrderItem : BaseEntity
     public decimal UnitPrice { get; set; }
     public decimal Quantity { get; set; }
     public decimal TotalPrice { get; set; }
+
+    // navigation property
+    public Order Order { get; set; } = null!;
+    public Product Product { get; set; } = null!;
 }

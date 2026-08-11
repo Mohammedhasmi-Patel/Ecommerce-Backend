@@ -11,6 +11,12 @@ public class AppUser : IdentityUser<Guid>
 
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-    public DateTime DeletedAt {get;set;}
+    public DateTime DeletedAt { get; set; }
 
+    // navigations propertly 
+
+    public ICollection<Order> Orders { get; set; } = [];
+    public ICollection<UserAddresses> UserAddresses { get; set; } = [];
+    public ICollection<Wishlist> Wishlists { get; set; } = [];
+    public ICollection<Cart> Carts { get; set; } = [];
 }

@@ -1,25 +1,5 @@
 namespace Ecommerce.API.Entities;
 
-/*
-Table Wishlists {
-  Id Guid [PRIMARY KEY]
-  UserId Guid [UNIQUE]
-
-  CreatedAt timestamp
-  UpdatedAt timestamp
-}
-
-Table WishlistItems {
-  Id Guid [PRIMARY KEY]
-
-  WishlistId Guid
-  ProductId Guid
-
-  CreatedAt timestamp
-
-}
-
-*/
 
 public class Wishlist
 {
@@ -27,4 +7,9 @@ public class Wishlist
     public Guid UserId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime UpdatedAt { get; set; }
+
+    // navigation property 
+    public AppUser User { get; set; } = null!;
+    public ICollection<WishlistItem> WishlistItems { get; set; } = [];
+
 }
