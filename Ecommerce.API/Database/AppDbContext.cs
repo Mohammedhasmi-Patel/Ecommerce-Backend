@@ -10,6 +10,23 @@ public class AppDbContext : IdentityDbContext<AppUser,AppRole,Guid>
     {
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<ProductCategory>()
+            .HasOne(pc => pc.Product)
+            .WithMany()
+            .HasForeignKey(pc => pc.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ProductCategory>()
+            .HasOne(pc => pc.Category)
+            .WithMany()
+            .HasForeignKey(pc => pc.CategoryId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+
     public DbSet<AppUser> AppUsers { get; set; } = null!;
     public DbSet<AppRole> AppRoles { get; set; } = null!;
     public DbSet<Cart> Carts { get; set; } = null!;

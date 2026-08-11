@@ -5,8 +5,8 @@ namespace Ecommerce.API.Entities;
 public class BaseEntity
 {
     [Key]
-    public Guid Id { get; set; }  
+    public Guid Id { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime DeletedAt {get;set;} = DateTime.MinValue;
+    public DateTime? UpdatedAt { get; set; }
+    public DateTime? DeletedAt { get; set; }
 }
