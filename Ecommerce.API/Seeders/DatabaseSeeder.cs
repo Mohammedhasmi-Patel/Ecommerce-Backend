@@ -1,4 +1,3 @@
-using Bogus;
 using Ecommerce.API.Database;
 using Ecommerce.API.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -13,9 +12,17 @@ public static class DatabaseSeeder
         var dbContext = serviceProvider.GetRequiredService<AppDbContext>();
         var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
 
-        // Roles
-        await RoleSeeder.SeedAsync(dbContext);
-        await UserSeeder.SeedAsync(dbContext, userManager);
+        // await RoleSeeder.SeedAsync(dbContext);
+        // await UserSeeder.SeedAsync(dbContext, userManager);
+        // await CategorySeeder.SeedAsync(dbContext);
+        // await CountrySeeder.SeedAsync(dbContext);
+        // await StateSeeder.SeedAsync(dbContext);
+        // await CitySeeder.SeedAsync(dbContext);
+        // await CartSeeder.SeedAsync(dbContext);
+        // await ProductSeeder.SeedAsync(dbContext);
+        // await ProductCategorySeeder.SeedAsync(dbContext);
+        await ProductImageSeeder.SeedAsync(dbContext);
+        // await CartItems.SeedAsync(dbContext);
 
     }
 
