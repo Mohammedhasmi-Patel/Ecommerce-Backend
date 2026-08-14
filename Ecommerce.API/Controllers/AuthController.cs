@@ -22,4 +22,12 @@ public class AuthController : BaseController
         return Created(string.Empty, response);
     }
 
+    [HttpPost]
+    [Route("login")]
+    public async Task<IActionResult> LoginUserAsync([FromBody] LoginUserRequestDTO loginRequest,CancellationToken cancellationToken)
+    {
+        var response = await _authService.LoginUserAsync(loginRequest, cancellationToken);
+        return Ok(response);
+    }
+
 }

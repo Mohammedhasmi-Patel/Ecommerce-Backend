@@ -14,7 +14,7 @@ public class AppUserRepository : IAppUserRepository
     {
         _usermanager = userManager;
     }
-    public async Task<AppUser> CreateAppUser(AppUser user,string password)
+    public async Task<AppUser> CreateAppUser(AppUser user, string password)
     {
         var result = await _usermanager.CreateAsync(user, password);
         if (!result.Succeeded)
@@ -22,7 +22,7 @@ public class AppUserRepository : IAppUserRepository
             string errorMessage = result.Errors.FirstOrDefault()?.Description ?? "Something went wrong";
             throw new BadRequestException(errorMessage);
         }
-        await _usermanager.AddToRoleAsync(user,nameof(UserRoleEnum.User));
+        await _usermanager.AddToRoleAsync(user, nameof(UserRoleEnum.User));
         return user;
     }
 
@@ -35,7 +35,7 @@ public class AppUserRepository : IAppUserRepository
 
     public async Task<AppUser?> GetAppUserByEmailAsync(string email)
     {
-        return await _usermanager.FindByEmailAsync(email); 
+        return await _usermanager.FindByEmailAsync(email);
     }
 
     public async Task<AppUser?> GetAppUserByIdAsync(string id)
@@ -44,4 +44,11 @@ public class AppUserRepository : IAppUserRepository
         AppUser? user = await _usermanager.FindByIdAsync(id);
         return user;
     }
+
+    public async Task<bool> VerifyPasswordAsync(AppUser user, string password)
+    {
+        var result = await _usermanager.CheckPasswordAsync(user, password);
+        return result;
+    }
+
 }

@@ -26,10 +26,22 @@ public static class AuthUserMapster
             FirstName = user.FirstName,
             LastName = user.LastName,
             Avatar = user.Avatar,
-            Email = user.Email,
+            Email = user.Email ?? string.Empty,
             Token = token
         };
     }
 
+    
+    public static LoginUserResponseDTO ToLoginUserResponseDTO(this AppUser user,string token)
+    {
+        return new LoginUserResponseDTO()
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Avatar = user.Avatar,
+            Email = user.Email ?? string.Empty,
+            Token = token
+        };
+    }
 
 }
