@@ -2,7 +2,7 @@ namespace Ecommerce.API.DTO;
 
 public class ApiResponse<T> where T : class
 {
-    public bool IsSuccess { get; set; } = false;
+    public bool Success { get; set; } = false;
     public string Message { get; set; } = null!;
     public int StatusCode { get; set; }
     public T? Data { get; set; }
@@ -14,7 +14,7 @@ public class ApiResponse<T> where T : class
     {
         return new ApiResponse<T>
         {
-            IsSuccess = true,
+            Success = true,
             Message = message,
             StatusCode = statusCode,
             Data = data
@@ -27,7 +27,7 @@ public class ApiResponse<T> where T : class
     {
         return new ApiResponse<T>
         {
-            IsSuccess = false,
+            Success = false,
             Message = message,
             StatusCode = statusCode,
             Data = null
