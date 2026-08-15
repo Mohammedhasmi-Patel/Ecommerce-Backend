@@ -102,6 +102,8 @@ public static class ConfigureService
         service.AddScoped<IStorageService, StorageService>();
         service.AddScoped<IProductService, ProductService>();
         service.AddScoped<IProductRepository, ProductRepository>();
+        service.AddScoped<ICartRepository, CartRepository>();
+        service.AddScoped<ICartService, CartService>();
 
         return service;
     }

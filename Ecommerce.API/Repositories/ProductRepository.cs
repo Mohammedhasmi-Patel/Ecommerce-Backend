@@ -50,5 +50,11 @@ public class ProductRepository : IProductRepository
 
     }
 
+    public async Task<Product> GetByIdAsync(Guid productId)
+    {
+        return await _context.Products
+                            .Where(p => p.DeletedAt == null)
+                            .FirstOrDefaultAsync(p => p.Id == productId);
+    }
 }
 
