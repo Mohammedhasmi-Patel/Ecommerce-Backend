@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace Ecommerce.API.Extension;
 
@@ -35,7 +36,27 @@ public static class ConfigureService
         });
 
         service.AddEndpointsApiExplorer();
-        service.AddSwaggerGen();
+        service.AddSwaggerGen(options =>
+        {
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header
+            });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+        });
 
         string databaseUrl = configuration.GetConnectionString("Default") ?? throw new Exception("Database string not found.");
 
@@ -66,10 +87,12 @@ public static class ConfigureService
                     Encoding.UTF8.GetBytes(jwtConfiguration.Secret))
             };
         });
-        service.AddScoped<IAuthService,AuthService>();
-        service.AddScoped<ITokenService,TokenService>();
-        service.AddScoped<IAppUserRepository,AppUserRepository>();
-        service.AddScoped<IStorageService,StorageService>();
+        service.AddScoped<IAuthService, AuthService>();
+        service.AddScoped<ITokenService, TokenService>();
+        service.AddScoped<IAppUserRepository, AppUserRepository>();
+        service.AddScoped<IStorageService, StorageService>();
+        service.AddScoped<IProductService, ProductService>();
+        service.AddScoped<IProductRepository, ProductRepository>();
 
         return service;
     }

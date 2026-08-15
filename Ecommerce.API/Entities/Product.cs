@@ -13,7 +13,6 @@ public class Product : BaseEntity
 
     [Column(TypeName = "decimal(10,2)")]
     public decimal SellPrice { get; set; }
-
     public decimal StockQuantity { get; set; }
 
 }
