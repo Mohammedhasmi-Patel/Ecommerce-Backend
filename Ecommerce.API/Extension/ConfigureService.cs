@@ -20,6 +20,15 @@ public static class ConfigureService
 {
     public static IServiceCollection ConfigureProjectServices(this IServiceCollection service, IConfiguration configuration)
     {
+        service.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy", policy =>
+            {
+                policy.WithOrigins("http://localhost:3000")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+            });
+        });
         service.AddControllers();
         service.Configure<ApiBehaviorOptions>(options =>
         {

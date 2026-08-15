@@ -20,7 +20,7 @@ public class AppUserRepository : IAppUserRepository
         if (!result.Succeeded)
         {
             string errorMessage = result.Errors.FirstOrDefault()?.Description ?? "Something went wrong";
-            throw new BadRequestException(errorMessage);
+            throw new UnauthorizedException(errorMessage);
         }
         await _usermanager.AddToRoleAsync(user, nameof(UserRoleEnum.User));
         return user;

@@ -15,4 +15,5 @@ public class Product : BaseEntity
     public decimal SellPrice { get; set; }
     public decimal StockQuantity { get; set; }
 
+    public ICollection<ProductImage> ProductImages { get; set; } = [];
 }

@@ -5,6 +5,7 @@ using Ecommerce.API.Exceptions;
 using Ecommerce.API.Interfaces;
 using Ecommerce.API.Mapster;
 using Ecommerce.API.RepoContracts;
+using Microsoft.Extensions.Configuration;
 
 namespace Ecommerce.API.Services;
 
@@ -14,14 +15,21 @@ public class AuthService : IAuthService
     private readonly IAppUserRepository _appUserRepository;
     private readonly ITokenService _tokenService;
     private readonly AppDbContext _dbContext;
+    private readonly string _baseUrl;
 
 
-    public AuthService(IStorageService storageService, IAppUserRepository appUserRepository, ITokenService tokenService, AppDbContext dbContext)
+    public AuthService(
+        IStorageService storageService,
+        IAppUserRepository appUserRepository,
+        ITokenService tokenService,
+        AppDbContext dbContext,
+        IConfiguration configuration)
     {
         _storageService = storageService;
         _appUserRepository = appUserRepository;
         _tokenService = tokenService;
         _dbContext = dbContext;
+        _baseUrl = configuration["BackendUrl"] ?? string.Empty;
     }
 
     public async Task<ApiResponse<LoginUserResponseDTO>> LoginUserAsync(LoginUserRequestDTO request, CancellationToken cancellationToken)
@@ -29,17 +37,17 @@ public class AuthService : IAuthService
         await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
         try
         {
-            var foundUser = await _appUserRepository.GetAppUserByEmailAsync(request.Email) ?? throw new NotFoundException("User not found");
+            var foundUser = await _appUserRepository.GetAppUserByEmailAsync(request.Email) ?? throw new NotFoundException("User with this email not exist.");
 
             bool isPasswordValid = await _appUserRepository.VerifyPasswordAsync(foundUser, request.Password);
             if (!isPasswordValid)
             {
-                throw new BadRequestException("Invalid password");
+                throw new ConflictException("Invalid credentials.");
             }
 
             string token = await _tokenService.GenerateTokenAsync(foundUser);
 
-            var authResponse = foundUser.ToLoginUserResponseDTO(token);
+            var authResponse = foundUser.ToLoginUserResponseDTO(token, _baseUrl);
 
             await transaction.CommitAsync(cancellationToken);
             return ApiResponse<LoginUserResponseDTO>.SuccessResponse(authResponse, "User logged in successfully.");
@@ -78,7 +86,7 @@ public class AuthService : IAuthService
             var createdUser = await _appUserRepository.CreateAppUser(appUser, request.Password);
             string token = await _tokenService.GenerateTokenAsync(appUser);
 
-            var authResponse = createdUser.ToRegisterUserResponseDTO(token);
+            var authResponse = createdUser.ToRegisterUserResponseDTO(token, _baseUrl);
 
             await transaction.CommitAsync(cancellationToken);
             return ApiResponse<RegisterUserResponseDTO>.SuccessResponse(authResponse, "User created successfully.");

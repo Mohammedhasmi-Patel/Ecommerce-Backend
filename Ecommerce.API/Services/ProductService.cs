@@ -21,7 +21,9 @@ public class ProductService : IProductService
     {
         PaginationResponseDto<Product> products = await _productRepository.GetAllAsync(queryParameters);
 
-        var productsResponse = products.Items.Select(p => p.MapToProductResponseDTO()).ToList();
+        var productsResponse = (products.Items ?? new List<Product>())
+            .Select(p => p.MapToProductResponseDTO())
+            .ToList();
 
         int totalPage = products.TotalPages;
         int totalCount = products.TotalCount;

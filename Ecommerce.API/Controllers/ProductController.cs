@@ -14,11 +14,11 @@ public class ProductController : BaseController
     {
         _productService = productService;
     }
-    
+
     [HttpGet]
-    public async Task<IActionResult> Get(ProductQueryParameters queryParameters)
+    public async Task<IActionResult> Get([FromQuery] ProductQueryParameters queryParameters)
     {
-         var response = await _productService.GetAllAsync(queryParameters);
-         return Ok(response);
+        var response = await _productService.GetAllAsync(queryParameters);
+        return Ok(response);
     }
 }

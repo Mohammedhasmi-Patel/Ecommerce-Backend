@@ -25,6 +25,7 @@ using (var scope = app.Services.CreateScope())
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

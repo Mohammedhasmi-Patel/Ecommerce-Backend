@@ -7,7 +7,7 @@ namespace Ecommerce.API.RepoContracts;
 
 public interface IProductRepository
 {
-    Task<PaginationResponseDto<Product?>> GetAllAsync(ProductQueryParameters queryParameters);
+    Task<PaginationResponseDto<Product>> GetAllAsync(ProductQueryParameters queryParameters);
     // Task<ProductResponseDTO> GetByIdAsync(int productId);
     // Task<int> CreateProductAsync(ProductCreateDto productDto);
     // Task<bool> UpdateProductAsync(int productId, ProductUpdateDto productDto);

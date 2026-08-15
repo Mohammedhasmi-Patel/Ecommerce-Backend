@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Ecommerce.API.DTO;
 using Ecommerce.API.Exceptions;
 
@@ -20,9 +21,10 @@ public class GlobalExceptionMiddleware
         }
         catch (AppException ex)
         {
+            ApiResponse<object> res;
             if (ex.StatusCode is StatusCodes.Status500InternalServerError)
             {
-                ApiResponse<object> res = new ApiResponse<object>()
+                res = new ApiResponse<object>()
                 {
                     Success = false,
                     StatusCode = ex.StatusCode,
@@ -30,6 +32,25 @@ public class GlobalExceptionMiddleware
                     Data = null
                 };
             }
+            else
+            {
+                res = new ApiResponse<object>()
+                {
+                    Success = false,
+                    StatusCode = ex.StatusCode,
+                    Message = ex.Message,
+                    Data = null
+                };
+            }
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+            string json = JsonSerializer.Serialize(res, options);
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = ex.StatusCode;
+            await context.Response.WriteAsync(json);
         }
     }
 

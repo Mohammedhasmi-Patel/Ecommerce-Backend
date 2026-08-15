@@ -10,4 +10,7 @@ public class ProductResponseDTO
     public decimal OriginalPrice { get; set; }
 
     public decimal SellPrice { get; set; }
+
+    public string? ThumbnailUrl { get; set; }
+
 }

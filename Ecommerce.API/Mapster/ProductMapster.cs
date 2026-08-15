@@ -14,7 +14,8 @@ public static class ProductMapster
             Slug = product.Slug,
             Description = product.Description,
             OriginalPrice = product.OriginalPrice,
-            SellPrice = product.SellPrice
+            SellPrice = product.SellPrice,
+            ThumbnailUrl = product.ProductImages.FirstOrDefault(p => p.IsPrimary)?.FilePath,
         };
     }
 }

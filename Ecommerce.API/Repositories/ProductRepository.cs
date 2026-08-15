@@ -16,21 +16,24 @@ public class ProductRepository : IProductRepository
     {
         _context = context;
     }
-    public async Task<PaginationResponseDto<Product?>> GetAllAsync(ProductQueryParameters queryParameters)
+    public async Task<PaginationResponseDto<Product>> GetAllAsync(ProductQueryParameters queryParameters)
     {
-        string search = queryParameters.SearchQuery?.ToLower().Trim() ?? "";
-        var productQuery = _context.Products.AsQueryable();
-
+        string search = queryParameters.SearchQuery?.Trim() ?? "";
+        var productQuery = _context.Products
+                                    .Include(p => p.ProductImages)
+                                    .Where(p => p.DeletedAt == null)
+                                    .AsQueryable();
 
         if (!string.IsNullOrEmpty(search))
         {
-            productQuery = productQuery.Where(p => p.Name.ToLower().Contains(search) || p.Description.ToLower().Contains(search));
+            productQuery = productQuery.Where(p =>
+                p.Name.Contains(search) ||
+                p.Description.Contains(search));
         }
 
         var totalItem = await productQuery.CountAsync();
 
         var response = await productQuery
-                                    .Where(p => p.DeletedAt != null)
                                     .OrderByDescending(p => p.CreatedAt)
                                     .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize)
                                     .Take(queryParameters.PageSize)
@@ -48,3 +51,4 @@ public class ProductRepository : IProductRepository
     }
 
 }
+
