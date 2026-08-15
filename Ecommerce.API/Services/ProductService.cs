@@ -2,6 +2,7 @@ using Ecommerce.API.DTO;
 using Ecommerce.API.DTO.Common.Pagination;
 using Ecommerce.API.DTO.Products;
 using Ecommerce.API.Entities;
+using Ecommerce.API.Exceptions;
 using Ecommerce.API.Interfaces;
 using Ecommerce.API.Mapster;
 using Ecommerce.API.RepoContracts;
@@ -17,9 +18,9 @@ public class ProductService : IProductService
     {
         _productRepository = productRepository;
     }
-    public async Task< ApiResponse<PaginationResponseDto<ProductResponseDTO>>> GetAllAsync(ProductQueryParameters queryParameters)
+    public async Task<ApiResponse<PaginationResponseDTO<ProductResponseDTO>>> GetAllAsync(ProductQueryParameters queryParameters)
     {
-        PaginationResponseDto<Product> products = await _productRepository.GetAllAsync(queryParameters);
+        PaginationResponseDTO<Product> products = await _productRepository.GetAllAsync(queryParameters);
 
         var productsResponse = (products.Items ?? new List<Product>())
             .Select(p => p.MapToProductResponseDTO())
@@ -30,7 +31,7 @@ public class ProductService : IProductService
         int page = products.PageNumber;
         int pageSize = products.PageSize;
 
-        var res =  new PaginationResponseDto<ProductResponseDTO>
+        var res = new PaginationResponseDTO<ProductResponseDTO>
         {
             Items = productsResponse,
             TotalPages = totalPage,
@@ -38,7 +39,13 @@ public class ProductService : IProductService
             PageNumber = page,
             PageSize = pageSize
         };
-        return ApiResponse<PaginationResponseDto<ProductResponseDTO>>.SuccessResponse(res,"Product fetched successfully.");
+        return ApiResponse<PaginationResponseDTO<ProductResponseDTO>>.SuccessResponse(res, "Product fetched successfully.");
     }
 
+    public async Task<ApiResponse<ProductDetailResponseDTO>> GetBySlugAsync(string slug)
+    {
+        var product = await _productRepository.GetBySlugAsync(slug) ?? throw new NotFoundException("Product not found.");
+        ProductDetailResponseDTO productDetail = product.MapToProductDetailResponseDTO();
+        return ApiResponse<ProductDetailResponseDTO>.SuccessResponse(productDetail, "Product fetched successfully.");
+    }
 }

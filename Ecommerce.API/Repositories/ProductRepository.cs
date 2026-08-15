@@ -16,11 +16,12 @@ public class ProductRepository : IProductRepository
     {
         _context = context;
     }
-    public async Task<PaginationResponseDto<Product>> GetAllAsync(ProductQueryParameters queryParameters)
+    public async Task<PaginationResponseDTO<Product>> GetAllAsync(ProductQueryParameters queryParameters)
     {
         string search = queryParameters.SearchQuery?.Trim() ?? "";
         var productQuery = _context.Products
                                     .Include(p => p.ProductImages)
+                                    .Include(p => p.Categories)
                                     .Where(p => p.DeletedAt == null)
                                     .AsQueryable();
 
@@ -31,6 +32,12 @@ public class ProductRepository : IProductRepository
                 p.Description.Contains(search));
         }
 
+        if (!string.IsNullOrEmpty(queryParameters.Category))
+        {
+            productQuery = productQuery.Where(p =>
+                p.Categories.Any(c => c.Category != null && c.Category.Slug == queryParameters.Category));
+        }
+
         var totalItem = await productQuery.CountAsync();
 
         var response = await productQuery
@@ -39,7 +46,7 @@ public class ProductRepository : IProductRepository
                                     .Take(queryParameters.PageSize)
                                     .ToListAsync();
 
-        return new PaginationResponseDto<Product>
+        return new PaginationResponseDTO<Product>
         {
             Items = response,
             PageNumber = queryParameters.PageNumber,
@@ -56,5 +63,15 @@ public class ProductRepository : IProductRepository
                             .Where(p => p.DeletedAt == null)
                             .FirstOrDefaultAsync(p => p.Id == productId);
     }
+
+    public async Task<Product?> GetBySlugAsync(string slug)
+    {
+        return await _context.Products
+                            .Where(p => p.DeletedAt == null)
+                            .Include(p => p.ProductImages)
+                            .FirstOrDefaultAsync(p => p.Slug == slug);
+
+    }
+
 }
 

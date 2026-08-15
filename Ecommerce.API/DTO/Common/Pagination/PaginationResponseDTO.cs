@@ -1,6 +1,6 @@
 namespace Ecommerce.API.DTO.Common.Pagination;
 
-public class PaginationResponseDto<T>
+public class PaginationResponseDTO<T>
 {
     public List<T>? Items { get; set; }
     public int TotalPages { get; set; }

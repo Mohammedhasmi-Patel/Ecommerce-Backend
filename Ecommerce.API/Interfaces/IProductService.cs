@@ -6,5 +6,6 @@ namespace Ecommerce.API.Interfaces;
 
 public interface IProductService
 {
-    Task<ApiResponse<PaginationResponseDto<ProductResponseDTO>>> GetAllAsync(ProductQueryParameters queryParameters);
+    Task<ApiResponse<PaginationResponseDTO<ProductResponseDTO>>> GetAllAsync(ProductQueryParameters queryParameters);
+    Task<ApiResponse<ProductDetailResponseDTO>> GetBySlugAsync(string slug);
 }

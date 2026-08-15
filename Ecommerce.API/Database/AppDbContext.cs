@@ -16,7 +16,7 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>
 
         modelBuilder.Entity<ProductCategory>()
             .HasOne(pc => pc.Product)
-            .WithMany()
+            .WithMany(p => p.Categories)
             .HasForeignKey(pc => pc.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
 

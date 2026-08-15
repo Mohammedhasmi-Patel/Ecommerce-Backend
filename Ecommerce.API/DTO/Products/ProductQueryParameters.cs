@@ -7,6 +7,8 @@ public class ProductQueryParameters
 
     public string? SearchQuery { get; set; }
     public int PageNumber { get; set; } = 1;
+
+    public string? Category { get; set; } // slug
     public int PageSize
     {
         get => _pageSize;

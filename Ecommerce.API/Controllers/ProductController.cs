@@ -21,4 +21,11 @@ public class ProductController : BaseController
         var response = await _productService.GetAllAsync(queryParameters);
         return Ok(response);
     }
+
+    [HttpGet("{slug}")]
+    public async Task<IActionResult> GetBySlug([FromRoute] string slug)
+    {
+        var response = await _productService.GetBySlugAsync(slug);
+        return Ok(response);
+    }
 }
