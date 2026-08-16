@@ -1,9 +1,9 @@
-using Ecommerce.Infrastructure.Database;
 using Ecommerce.Application.DTOs;
 using Ecommerce.Application.DTOs.Common.Pagination;
 using Ecommerce.Application.DTOs.Products;
-using Ecommerce.Domain.Entities;
 using Ecommerce.Application.RepoContracts;
+using Ecommerce.Domain.Entities;
+using Ecommerce.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Infrastructure.Repositories;
@@ -61,6 +61,7 @@ public class ProductRepository : IProductRepository
     {
         return await _context.Products
                             .Where(p => p.DeletedAt == null)
+                            .Include(p=>p.ProductImages)
                             .FirstOrDefaultAsync(p => p.Id == productId);
     }
 
