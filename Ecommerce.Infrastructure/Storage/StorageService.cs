@@ -16,10 +16,17 @@ public class StorageService : IStorageService
 
     public Task<bool> DeleteFileAsync(string filePath, CancellationToken cancellationToken = default)
     {
-        // throw new NotImplementedException();
-        if (File.Exists(filePath))
+        if (string.IsNullOrEmpty(filePath))
         {
-            File.Delete(filePath);
+            return Task.FromResult(false);
+        }
+
+        string relativePath = filePath.TrimStart('/', '\\');
+        string physicalPath = Path.Combine(_environment.WebRootPath, relativePath);
+
+        if (File.Exists(physicalPath))
+        {
+            File.Delete(physicalPath);
             return Task.FromResult(true);
         }
         return Task.FromResult(false);

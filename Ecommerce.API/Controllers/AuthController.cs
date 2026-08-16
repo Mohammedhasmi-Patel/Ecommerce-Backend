@@ -1,5 +1,6 @@
 using Ecommerce.Application.DTOs.Auth;
 using Ecommerce.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.API.Controllers;
@@ -29,5 +30,15 @@ public class AuthController : BaseController
         return Ok(response);
     }
 
+    [HttpPut]
+    [Route("update")]
+    [Authorize]
+    public async Task<IActionResult> UpdateUserAsync([FromForm] UpdateUserRequestDTO updateRequest, CancellationToken cancellationToken)
+    {
+        var response = await _authService.UpdateUserAsync(updateRequest, cancellationToken);
+        return Ok(response);
+    }
+
 }
+
 

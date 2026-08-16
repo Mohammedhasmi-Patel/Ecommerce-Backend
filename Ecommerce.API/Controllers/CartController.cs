@@ -42,7 +42,6 @@ public class CartController : BaseController
         return Ok(response);
     }
 
-    
     [HttpDelete]
     public async Task<IActionResult> DeleteCartItem(Guid cartItemId)
     {

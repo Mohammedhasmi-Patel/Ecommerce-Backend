@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.Http;
 using Ecommerce.Application.DTOs;
 using Ecommerce.Application.DTOs.Auth;
-using Ecommerce.Domain.Exceptions;
 using Ecommerce.Application.Interfaces;
 using Ecommerce.Application.Mappers;
 using Ecommerce.Application.RepoContracts;
+using Ecommerce.Domain.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace Ecommerce.Application.Services;
@@ -102,5 +102,47 @@ public class AuthService : IAuthService
         }
 
     }
-}
 
+    public async Task<ApiResponse<UpdateUserResponseDTO>> UpdateUserAsync(UpdateUserRequestDTO request, CancellationToken cancellationToken)
+    {
+        var user = await _appUserRepository.GetAppUserByEmailAsync(request.Email)
+            ?? throw new NotFoundException("User with this email does not exist.");
+
+        await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
+        string? newAvatarPath = null;
+        try
+        {
+            if (request.Avatar != null && request.Avatar.Length > 0)
+            {
+                if (!string.IsNullOrEmpty(user.Avatar))
+                {
+                    var res = await _storageService.DeleteFileAsync(user.Avatar, cancellationToken);
+                    if (!res) throw new BadRequestException("Failed to delete old avatar");
+                }
+
+                var uploadedFile = await _storageService.UploadFileAsync(request.Avatar, "users", cancellationToken);
+                if (!uploadedFile.Success)
+                {
+                    throw new BadRequestException("Failed to upload new avatar");
+                }
+                newAvatarPath = uploadedFile.FilePath;
+            }
+
+            user.ToAppUserFromUpdate(request, newAvatarPath);
+            var updatedUser = await _appUserRepository.UpdateAppUser(user, request);
+            var response = updatedUser.ToUpdateUserResponseDTO(_baseUrl);
+
+            await transaction.CommitAsync(cancellationToken);
+            return ApiResponse<UpdateUserResponseDTO>.SuccessResponse(response, "User updated successfully.");
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            if (!string.IsNullOrEmpty(newAvatarPath))
+            {
+                await _storageService.DeleteFileAsync(newAvatarPath, cancellationToken);
+            }
+            throw;
+        }
+    }
+}

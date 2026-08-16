@@ -1,7 +1,8 @@
+using Ecommerce.Application.DTOs.Auth;
+using Ecommerce.Application.RepoContracts;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Enums;
 using Ecommerce.Domain.Exceptions;
-using Ecommerce.Application.RepoContracts;
 using Microsoft.AspNetCore.Identity;
 
 namespace Ecommerce.Infrastructure.Repositories;
@@ -44,6 +45,31 @@ public class AppUserRepository : IAppUserRepository
         AppUser? user = await _usermanager.FindByIdAsync(id);
         return user;
     }
+
+    public async Task<AppUser> UpdateAppUser(AppUser user, UpdateUserRequestDTO updateRequest)
+    {
+        user.FirstName = updateRequest.FirstName;
+        user.LastName = updateRequest.LastName;
+        
+        if (user.Email != updateRequest.Email)
+        {
+            user.Email = updateRequest.Email;
+            user.UserName = updateRequest.Email;
+        }
+
+        user.UpdatedAt = DateTime.UtcNow;
+
+        var result = await _usermanager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            string errorMessage = result.Errors.FirstOrDefault()?.Description ?? "Failed to update user";
+            throw new BadRequestException(errorMessage);
+        }
+
+        return user;
+    }
+
+
 
     public async Task<bool> VerifyPasswordAsync(AppUser user, string password)
     {

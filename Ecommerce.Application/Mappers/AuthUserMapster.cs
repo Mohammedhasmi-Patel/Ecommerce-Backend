@@ -1,6 +1,6 @@
+using Ecommerce.Application.Common.Helpers;
 using Ecommerce.Application.DTOs.Auth;
 using Ecommerce.Domain.Entities;
-using Ecommerce.Application.Common.Helpers;
 namespace Ecommerce.Application.Mappers;
 
 public static class AuthUserMapster
@@ -47,5 +47,27 @@ public static class AuthUserMapster
         };
     }
 
+    public static AppUser ToAppUserFromUpdate(this AppUser user, UpdateUserRequestDTO request, string? avatarUrl = null)
+    {
+        if(request.FirstName != null) user.FirstName = request.FirstName;
+        if(request.LastName != null) user.LastName = request.LastName;
+        if(request.Email != null) user.Email = request.Email;
+        if(avatarUrl != null) user.Avatar = avatarUrl;
+        
+        user.UpdatedAt = DateTime.UtcNow;
+        return user;
+    }
+
+    public static UpdateUserResponseDTO ToUpdateUserResponseDTO(this AppUser user, string baseUrl)
+    {
+        return new UpdateUserResponseDTO()
+        {
+            Id = user.Id.ToString(),
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email ?? string.Empty,
+            Avatar = FileHelper.GetAvatarUrl(user.Avatar, baseUrl)
+        };
+    }
 }
 
