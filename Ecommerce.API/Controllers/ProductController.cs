@@ -1,5 +1,5 @@
-using Ecommerce.API.DTO.Products;
-using Ecommerce.API.Interfaces;
+using Ecommerce.Application.DTOs.Products;
+using Ecommerce.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,3 +29,4 @@ public class ProductController : BaseController
         return Ok(response);
     }
 }
+

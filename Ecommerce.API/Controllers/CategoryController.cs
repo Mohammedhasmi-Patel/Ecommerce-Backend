@@ -1,5 +1,5 @@
-using Ecommerce.API.DTO.Categories;
-using Ecommerce.API.Interfaces;
+using Ecommerce.Application.DTOs.Categories;
+using Ecommerce.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,3 +23,4 @@ public class CategoryController : BaseController
         return Ok(response);
     }
 }
+

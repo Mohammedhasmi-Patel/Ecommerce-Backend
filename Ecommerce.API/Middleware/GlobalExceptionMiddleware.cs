@@ -1,6 +1,6 @@
 using System.Text.Json;
-using Ecommerce.API.DTO;
-using Ecommerce.API.Exceptions;
+using Ecommerce.Application.DTOs;
+using Ecommerce.Domain.Exceptions;
 
 namespace Ecommerce.API.Middleware;
 
@@ -55,3 +55,4 @@ public class GlobalExceptionMiddleware
     }
 
 }
+

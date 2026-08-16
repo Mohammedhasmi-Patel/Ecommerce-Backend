@@ -1,5 +1,5 @@
-using Ecommerce.API.DTO.Auth;
-using Ecommerce.API.Interfaces;
+using Ecommerce.Application.DTOs.Auth;
+using Ecommerce.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.API.Controllers;
@@ -30,3 +30,4 @@ public class AuthController : BaseController
     }
 
 }
+

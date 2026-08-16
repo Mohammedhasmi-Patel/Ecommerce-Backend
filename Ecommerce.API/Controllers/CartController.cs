@@ -1,9 +1,8 @@
 using System.Security.Claims;
-using Ecommerce.API.DTO.Carts;
-using Ecommerce.API.Exceptions;
-using Ecommerce.API.Interfaces;
+using Ecommerce.Application.DTOs.Carts;
+using Ecommerce.Domain.Exceptions;
+using Ecommerce.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
 namespace Ecommerce.API.Controllers;
 
 [ApiController]
@@ -53,3 +52,4 @@ public class CartController : BaseController
     }
 
 }
+

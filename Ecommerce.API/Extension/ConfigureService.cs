@@ -1,16 +1,13 @@
 using System.Text;
-using Ecommerce.API.Configurations;
-using Ecommerce.API.Database;
-using Ecommerce.API.DTO;
-using Ecommerce.API.Entities;
-using Ecommerce.API.Interfaces;
-using Ecommerce.API.RepoContracts;
-using Ecommerce.API.Repositories;
-using Ecommerce.API.Services;
+using Ecommerce.Application;
+using Ecommerce.Application.DTOs;
+using Ecommerce.Domain.Entities;
+using Ecommerce.Infrastructure;
+using Ecommerce.Infrastructure.Database;
+using Ecommerce.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -67,10 +64,6 @@ public static class ConfigureService
                 });
         });
 
-        string databaseUrl = configuration.GetConnectionString("Default") ?? throw new Exception("Database string not found.");
-
-        service.AddDbContext<AppDbContext>(options => options.UseNpgsql(databaseUrl));
-
         service.AddIdentity<AppUser, AppRole>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
@@ -96,19 +89,11 @@ public static class ConfigureService
                     Encoding.UTF8.GetBytes(jwtConfiguration.Secret))
             };
         });
-        service.AddScoped<IAuthService, AuthService>();
-        service.AddScoped<ITokenService, TokenService>();
-        service.AddScoped<IAppUserRepository, AppUserRepository>();
-        service.AddScoped<IStorageService, StorageService>();
-        service.AddScoped<IProductService, ProductService>();
-        service.AddScoped<IProductRepository, ProductRepository>();
-        service.AddScoped<ICartRepository, CartRepository>();
-        service.AddScoped<ICartService, CartService>();
-        service.AddScoped<ICategoryService, CategoryService>();
-        service.AddScoped<ICategoryRepository,CategoryRepository>();
 
+        // Register application and infrastructure layers
+        service.AddApplicationServices();
+        service.AddInfrastructureServices(configuration);
 
         return service;
     }
-
 }

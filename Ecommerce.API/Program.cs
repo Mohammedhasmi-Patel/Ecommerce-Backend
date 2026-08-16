@@ -1,6 +1,6 @@
 using Ecommerce.API.Extension;
 using Ecommerce.API.Middleware;
-using Ecommerce.API.Seeders;
+using Ecommerce.Infrastructure.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
