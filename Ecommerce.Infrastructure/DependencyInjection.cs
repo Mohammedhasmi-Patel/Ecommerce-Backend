@@ -29,6 +29,7 @@ public static class DependencyInjection
         services.AddScoped<ICountriesRepository, CountriesRepository>();
         services.AddScoped<IStatesRepository, StatesRepository>();
         services.AddScoped<ICitiesRepository, CitiesRepository>();
+        services.AddScoped<IUserAddressesRepository, UserAddressesRepository>();
 
         // Infra services
         services.AddScoped<IStorageService, StorageService>();

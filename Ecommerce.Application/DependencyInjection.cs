@@ -16,6 +16,7 @@ public static class DependencyInjection
         services.AddScoped<ICountryService, CountryService>();
         services.AddScoped<IStateService, StateService>();
         services.AddScoped<ICityService, CityService>();
+        services.AddScoped<IUserAddressService, UserAddressService>();
 
         return services;
     }
